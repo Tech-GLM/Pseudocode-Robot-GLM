@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="GLM Robot Pseudocode Lab — learn sequence, inputs, conditionals, loops and functions by programming a maze robot.">
+  <title>GLM Robot Pseudocode Lab</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#codeEditor">Skip to editor</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">GLM</div>
+        <div>
+          <h1>Robot Pseudocode Lab</h1>
+          <p>Predict → Write → Trace → Run → Explain</p>
+        </div>
+      </div>
+      <div class="progress-box">
+        <span id="progressText">0 of 10 missions complete</span>
+        <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro-card" aria-labelledby="missionTitle">
+      <div>
+        <span class="eyebrow" id="missionNumber">Mission 1</span>
+        <h2 id="missionTitle">Loading mission…</h2>
+        <p id="missionConcept"></p>
+      </div>
+      <span class="difficulty" id="missionDifficulty"></span>
+    </section>
+
+    <nav id="missionStrip" class="mission-strip" aria-label="Missions"></nav>
+
+    <section class="workspace">
+      <article class="panel simulator-panel">
+        <div class="panel-heading">
+          <div>
+            <h2>Robot simulator</h2>
+            <p id="missionBrief"></p>
+          </div>
+          <button id="hintButton" class="ghost-button" type="button">Show hint</button>
+        </div>
+        <div id="hintBox" class="hint-box" hidden></div>
+
+        <div class="learning-focus" id="learningFocus"></div>
+
+        <div class="simulator-body">
+          <div class="canvas-shell">
+            <canvas id="mazeCanvas" width="720" height="520" aria-label="Robot maze"></canvas>
+          </div>
+
+          <div class="sensor-row">
+            <div class="sensor" id="sensorFront">Front<strong>—</strong></div>
+            <div class="sensor" id="sensorLeft">Left<strong>—</strong></div>
+            <div class="sensor" id="sensorRight">Right<strong>—</strong></div>
+            <div class="sensor" id="sensorGoal">Goal<strong>—</strong></div>
+            <div class="sensor" id="sensorTask">Task<strong>NONE</strong></div>
+          </div>
+
+          <div class="task-legend">
+            <span><b class="task-clean">C</b> CLEAN</span>
+            <span><b class="task-dance">D</b> DANCE</span>
+            <span><b class="task-talk">T</b> OUTPUT</span>
+            <span><b class="task-hand">H</b> RAISE HAND</span>
+          </div>
+
+          <div id="simulatorStatus" class="status normal" role="status" aria-live="polite">
+            <span class="status-dot"></span><span id="statusText">Read the mission before running.</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel editor-panel">
+        <div class="panel-heading">
+          <div>
+            <h2>Your pseudocode</h2>
+            <p>One instruction per line. Blocks insert as real lines — no visible \n symbols.</p>
+          </div>
+          <div class="editor-actions">
+            <button id="flowchartButton" class="ghost-button" type="button">Show flowchart</button>
+            <button id="downloadButton" class="ghost-button" type="button">Download .txt</button>
+          </div>
+        </div>
+
+        <div class="toolbar-section">
+          <span class="toolbar-label">Commands</span>
+          <div id="commandToolbar" class="editor-toolbar"></div>
+        </div>
+
+        <div class="toolbar-section">
+          <span class="toolbar-label">Code blocks</span>
+          <div id="blockToolbar" class="editor-toolbar blocks"></div>
+        </div>
+
+        <div class="editor-wrap">
+          <textarea id="codeEditor" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="Pseudocode editor"></textarea>
+          <span id="lineIndicator" class="line-indicator">Ln 1</span>
+        </div>
+
+        <div class="run-controls">
+          <button id="runButton" class="primary-button" type="button">▶ Run program</button>
+          <button id="stepButton" class="secondary-button" type="button">Step trace</button>
+          <button id="resetButton" class="danger-button" type="button">Reset robot</button>
+        </div>
+
+        <label class="speed-control">
+          Animation speed
+          <input id="speedRange" type="range" min="100" max="800" value="360" step="20">
+        </label>
+      </article>
+    </section>
+
+    <section class="below-grid">
+      <article class="panel">
+        <div class="panel-heading">
+          <div>
+            <h3>Execution trace</h3>
+            <p>Only this box follows the newest step; the page stays fixed on the robot.</p>
+          </div>
+          <span id="actionCount" class="difficulty">0 actions</span>
+        </div>
+        <div id="traceWrap" class="trace-wrap">
+          <table>
+            <thead>
+              <tr><th>#</th><th>Instruction</th><th>Evidence</th></tr>
+            </thead>
+            <tbody id="traceBody">
+              <tr><td colspan="3" class="empty-row">Run or step a program to collect evidence.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <aside class="panel">
+        <div class="panel-heading">
+          <div>
+            <h3>Language guide</h3>
+            <p>Short examples clarify what INPUT and IF actually do.</p>
+          </div>
+        </div>
+        <div class="reference-body">
+          <details open>
+            <summary>INPUT = read and store</summary>
+            <p><code>INPUT FRONT_IS_CLEAR INTO pathOpen</code> asks the robot sensor for a value and stores that value in <code>pathOpen</code>.</p>
+            <pre>INPUT FRONT_IS_CLEAR INTO pathOpen
+OUTPUT pathOpen</pre>
+            <p>Important: moving or turning does not automatically update <code>pathOpen</code>. Use INPUT again to read the new situation.</p>
+          </details>
+
+          <details open>
+            <summary>IF = choose one path</summary>
+            <pre>INPUT FRONT_IS_CLEAR INTO pathOpen
+IF pathOpen THEN
+  MOVE
+ELSE
+  TURN RIGHT
+END IF</pre>
+            <p>If <code>pathOpen</code> is TRUE, the robot moves. If it is FALSE, the robot turns right. Only one branch runs.</p>
+          </details>
+
+          <details>
+            <summary>Task sensor example</summary>
+            <pre>INPUT CURRENT_TASK INTO task
+IF task = "CLEAN" THEN
+  CLEAN
+END IF</pre>
+            <p>The condition is useful because the action happens only when the current tile asks for it.</p>
+          </details>
+
+          <details>
+            <summary>Loops</summary>
+            <pre>REPEAT 4 TIMES
+  MOVE
+END REPEAT</pre>
+            <pre>WHILE FRONT_IS_CLEAR DO
+  MOVE
+END WHILE</pre>
+          </details>
+
+          <details>
+            <summary>Variables and functions</summary>
+            <pre>SET steps TO 0
+INCREASE steps BY 1
+OUTPUT steps</pre>
+            <pre>FUNCTION celebrate()
+  OUTPUT "Mission complete"
+  DANCE
+END FUNCTION
+
+CALL celebrate()</pre>
+          </details>
+        </div>
+      </aside>
+    </section>
+
+    <footer>
+      <span>GLM Robot Pseudocode Lab · GitHub Pages edition · v2.0.0</span>
+    </footer>
+  </main>
+
+  <div id="flowchartOverlay" class="flowchart-overlay" hidden>
+    <section class="flowchart-dialog" role="dialog" aria-modal="true" aria-labelledby="flowchartTitle">
+      <div class="flowchart-header">
+        <div>
+          <h2 id="flowchartTitle">Pseudocode flowchart</h2>
+          <p>PSeInt-inspired symbols: start/end, process, input/output, decisions, loops and function calls.</p>
+        </div>
+        <div>
+          <button id="downloadFlowchartButton" class="ghost-button inverse" type="button">Download SVG</button>
+          <button id="closeFlowchartButton" class="ghost-button inverse" type="button">Close</button>
+        </div>
+      </div>
+      <div id="flowchartViewport" class="flowchart-viewport">
+        <div id="flowchartCanvas" class="flowchart-canvas"></div>
+      </div>
+    </section>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="src/levels.js"></script>
+  <script src="src/app.js"></script>
+</body>
+</html>
