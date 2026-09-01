@@ -6,27 +6,7 @@ GLM Robot Pseudocode Lab is a complete, student-facing web application for seven
 
 The project is a static website built with semantic HTML, vanilla CSS, and vanilla JavaScript. It has no framework, package manager, build step, database, external API, or paid dependency. After the files load, every feature works offline in the browser.
 
-## Live site
 
-After GitHub Pages is enabled, the site URL follows this format:
-
-```text
-https://USERNAME.github.io/GLM-Robot-Pseudocode-Lab/
-```
-
-Replace `USERNAME` with the GitHub account or organization that owns the repository.
-
-## Screenshot
-
-To add a screenshot to this README:
-
-1. Open the published lab on a Chromebook-sized browser window.
-2. Select a mission that shows the maze, robot, editor, and live sensors.
-3. Save the image as `assets/glm-robot-lab-screenshot.png`.
-4. Add the following Markdown below this list:
-
-```markdown
-![GLM Robot Pseudocode Lab interface](assets/glm-robot-lab-screenshot.png)
 ```
 
 ## Learning objectives
